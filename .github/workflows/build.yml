@@ -1,0 +1,49 @@
+name: Opus — Build on Linux
+
+on:
+  push:
+    branches:
+      - gh-actions
+  pull_request:
+
+jobs:
+  build:
+    name: Build (Linux)
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1) Checkout the repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2) Install dependencies
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          # build tools
+          sudo apt-get install -y build-essential cmake git
+
+      # 3) Create build directory
+      - name: Configure CMake
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+
+      # 4) Build
+      - name: Build
+        run: |
+          cd build
+          cmake --build . -- -j$(nproc)
+
+      # 5) (Optional) Run tests if present
+      - name: Run tests
+        run: |
+          cd build
+          ctest --output-on-failure || true
+
+      # 6) (Optional) Print binaries
+      - name: List build artifacts
+        run: |
+          ls -R build
+
