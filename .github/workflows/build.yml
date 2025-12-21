@@ -1,4 +1,4 @@
-name: Opus — Build on Linux
+name: Build & Test Opus (Linux, macOS, Windows)
 
 on:
   push:
@@ -8,42 +8,46 @@ on:
 
 jobs:
   build:
-    name: Build (Linux)
-    runs-on: ubuntu-latest
+    name: Build & Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
 
     steps:
-      # 1) Checkout the repo
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2) Install dependencies
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          # build tools
-          sudo apt-get install -y build-essential cmake git
+      # Build on Linux & macOS
+      - name: Build (Linux / macOS)
+        if: runner.os != 'Windows'
+        run: ./configure CC="gcc -arch x86_64 -arch arm64" --enable-deep-plc && make
 
-      # 3) Create build directory
-      - name: Configure CMake
-        run: |
-          mkdir build
-          cd build
-          cmake -DCMAKE_BUILD_TYPE=Release ..
+      # Build on Windows
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        run: .\configure CC="gcc -arch x86_64 --enable-deep-plc && make
 
-      # 4) Build
-      - name: Build
+      # ---- TEST STEP ----
+      - name: Test binary (Linux / macOS)
+        if: runner.os != 'Windows'
         run: |
-          cd build
-          cmake --build . -- -j$(nproc)
+          make test
 
-      # 5) (Optional) Run tests if present
-      - name: Run tests
+      - name: Test binary (Windows)
+        if: runner.os == 'Windows'
         run: |
-          cd build
-          ctest --output-on-failure || true
+          make test
 
-      # 6) (Optional) Print binaries
-      - name: List build artifacts
-        run: |
-          ls -R build
+      # Upload artifacts
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: opus-${{ runner.os }}
+          path: |
+            ./libs/libopus.a
 
