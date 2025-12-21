@@ -30,8 +30,7 @@ jobs:
         run: |
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
           pwd
-          ls -la
-          make --version
+          autconf
           ./configure CC="gcc" --enable-deep-plc
           make
           make check
