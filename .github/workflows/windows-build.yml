@@ -32,23 +32,8 @@ jobs:
           pwd
           ls -la
           make --version
-          # run your build
-          # make
-
-      # 2) Configure CMake
-      - name: Configure CMake
-        run: |
-          .\configure
-          ls -l Makefile
-
-      # 3) Build
-      - name: Build
-        run: |
+          ./configure CC="gcc" --enable-deep-plc
           make
-
-      # 4) Run tests
-      - name: Run tests
-        run: |
           make check
 
       # 5) Move libopus.a for packaging
