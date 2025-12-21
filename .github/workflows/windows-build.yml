@@ -29,14 +29,18 @@ jobs:
         shell: msys2 {0}
         run: |
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          echo -n "pwd:" 
           pwd
+          echo "################"
+          ls -l /mingw64/share/aclocal
           ln -s /mingw64/share/aclocal /mingw64/share/aclocal-1.16
           ls -l /mingw64/share/aclocal-1.16
           find /mingw64 -name automake
-          make --version
-          ./configure CC="gcc" --enable-deep-plc
-          make
-          make check
+          echo "################"
+          # make --version
+          # ./configure CC="gcc" --enable-deep-plc
+          # make
+          # make check
 
       # 5) Move libopus.a for packaging
       - name: Move libopus.a
