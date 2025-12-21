@@ -19,7 +19,7 @@ jobs:
       # 2) Configure CMake
       - name: Configure CMake
         run: |
-          ./configure CC="gcc" --enable-deep-plc
+          .\configure
           ls -l Makefile
 
       # 3) Build
