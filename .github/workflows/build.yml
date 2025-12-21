@@ -45,3 +45,4 @@ jobs:
           name: libopus-${{ runner.os }}
           path: |
             .libs/libopus.a
+            opus/include/*.h
