@@ -1,4 +1,4 @@
-name: Build & Test Opus (Linux, macOS, Windows)
+name: Opus — Build on Linux
 
 on:
   push:
@@ -8,46 +8,40 @@ on:
 
 jobs:
   build:
-    name: Build & Test on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          - macos-latest
-          - windows-latest
+    name: Build (Linux)
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      # 1) Checkout the repo
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      # Build on Linux & macOS
-      - name: Build (Linux / macOS)
-        if: runner.os != 'Windows'
-        run: ./configure CC="gcc -arch x86_64 -arch arm64" --enable-deep-plc && make
-
-      # Build on Windows
-      - name: Build (Windows)
-        if: runner.os == 'Windows'
-        run: .\configure CC="gcc -arch x86_64 --enable-deep-plc && make
-
-      # ---- TEST STEP ----
-      - name: Test binary (Linux / macOS)
-        if: runner.os != 'Windows'
+      # 2) Install dependencies
+      - name: Install dependencies
         run: |
-          make test
+          sudo apt-get update
+          # build tools
+          sudo apt-get install -y build-essential cmake git
 
-      - name: Test binary (Windows)
-        if: runner.os == 'Windows'
+      # 3) Configure CMake
+      - name: Configure CMake
         run: |
-          make test
+          ./configure CC="gcc -arch x86_64 -arch arm64" --enable-deep-plc
 
-      # Upload artifacts
-      - name: Upload binary
+      # 4) Build
+      - name: Build
+        run: |
+          make
+
+      # 5) Run tests
+      - name: Run tests
+        run: |
+          make check
+
+      # 6) Upload libopus.a
+      - name: Upload libopus.a
         uses: actions/upload-artifact@v4
         with:
-          name: opus-${{ runner.os }}
+          name: libopus-${{ runner.os }}
           path: |
-            ./libs/libopus.a
-
+            .libs/libopus.a
