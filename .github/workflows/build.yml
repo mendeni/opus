@@ -26,7 +26,7 @@ jobs:
       # 3) Configure CMake
       - name: Configure CMake
         run: |
-          ./configure CC="gcc -arch x86_64" --enable-deep-plc
+          ./configure CC="gcc" --enable-deep-plc
 
       # 4) Build
       - name: Build
