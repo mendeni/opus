@@ -22,7 +22,8 @@ jobs:
           if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
             Write-Host "Chocolatey not found — installing..."
             Set-ExecutionPolicy Bypass -Scope Process -Force
-            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+            iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
             # Ensure choco is on PATH for the rest of this job
             $chocoBin = Join-Path $env:ALLUSERSPROFILE 'chocolatey\bin'
             $env:PATH = "$chocoBin;$env:PATH"
