@@ -40,10 +40,10 @@ jobs:
 
       # 6) Upload libopus.a
       - name: Upload libopus.a
+        run: mv -v .libs/libopus.a libopus.a
         uses: actions/upload-artifact@v4
         with:
           name: opus-${{ runner.os }}
-          run: mv .libs/libopus.a libopus.a
           path: |
             libopus.a
             include/opus_custom.h
