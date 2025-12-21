@@ -40,12 +40,13 @@ jobs:
           # ls -l /mingw64/share/aclocal
           # ln -s /mingw64/share/aclocal /mingw64/share/aclocal-1.16
           # ls -l /mingw64/share/aclocal-1.16
-          find / -name 'aclocal*' -type f
+          # find / -name 'aclocal*' -type f
           echo "################"
-          # make --version
-          # ./configure CC="gcc" --enable-deep-plc
-          # make
-          # make check
+          make --version
+          autoreconf -fi || true
+          ./configure CC="gcc" --enable-deep-plc
+          make
+          make check
 
       # 5) Move libopus.a for packaging
       - name: Move libopus.a
