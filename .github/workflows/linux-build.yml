@@ -43,8 +43,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: opus-${{ runner.os }}
+          run: mv .libs/libopus.a libsopus.a
           path: |
-            .libs/libopus.a
+            libopus.a
             include/opus_custom.h
             include/opus_defines.h
             include/opus_multistream.h
