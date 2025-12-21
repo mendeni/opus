@@ -16,6 +16,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Ensure Chocolatey is installed
+        shell: pwsh
+        run: |
+          if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
+            Write-Host "Chocolatey not found — installing..."
+            Set-ExecutionPolicy Bypass -Scope Process -Force
+            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+            # Ensure choco is on PATH for the rest of this job
+            $chocoBin = Join-Path $env:ALLUSERSPROFILE 'chocolatey\bin'
+            $env:PATH = "$chocoBin;$env:PATH"
+            Write-Host "Chocolatey installed: $(choco --version)"
+          } else {
+            Write-Host "Chocolatey already installed: $(choco --version)"
+          }
+
       # 2) Configure CMake
       - name: Configure CMake
         run: |
