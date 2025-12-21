@@ -64,3 +64,6 @@ tests/test_opus_extensions
 tests/test_opus_padding
 tests/test_opus_projection
 trivial_example
+autom4te.cache
+configure~
+configure
