@@ -23,7 +23,12 @@ jobs:
           update: true            # run pacman -Syu (the action handles the restart dance)
           install: >
             base-devel
-            mingw-w64-x86_64-toolchain
+            autoconf
+            automake
+            m4
+            perl
+            pkg-config
+            libtool
 
       - name: Debug workspace & run make (MSYS2)
         shell: msys2 {0}
@@ -35,7 +40,7 @@ jobs:
           # ls -l /mingw64/share/aclocal
           # ln -s /mingw64/share/aclocal /mingw64/share/aclocal-1.16
           # ls -l /mingw64/share/aclocal-1.16
-          find /mingw64 -name aclocal-1.18 -type f
+          find / -name 'aclocal*' -type f
           echo "################"
           # make --version
           # ./configure CC="gcc" --enable-deep-plc
