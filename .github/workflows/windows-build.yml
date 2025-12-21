@@ -30,8 +30,7 @@ jobs:
         run: |
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
           pwd
-          find / -name aclocal
-          find / -name automake
+          find /usr/local -name aclocal
           make --version
           ./configure CC="gcc" --enable-deep-plc
           make
