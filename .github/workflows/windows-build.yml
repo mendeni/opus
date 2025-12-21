@@ -23,7 +23,12 @@ jobs:
           update: true            # run pacman -Syu (the action handles the restart dance)
           install: >
             base-devel
-            mingw-w64-x86_64-toolchain
+            autoconf
+            automake
+            m4
+            perl
+            pkg-config
+            libtool
 
       - name: Debug workspace & run make (MSYS2)
         shell: msys2 {0}
