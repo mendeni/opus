@@ -1,4 +1,4 @@
-name: Opus — Build on Linux
+name: Opus — Build on MacOS
 
 on:
   push:
