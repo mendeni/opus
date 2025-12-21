@@ -42,7 +42,12 @@ jobs:
       - name: Upload libopus.a
         uses: actions/upload-artifact@v4
         with:
-          name: libopus-${{ runner.os }}
+          name: opus-${{ runner.os }}
           path: |
             .libs/libopus.a
-            opus/include/*.h
+            include/opus_custom.h
+            include/opus_defines.h
+            include/opus_multistream.h
+            include/opus_projection.h
+            include/opus_types.h
+            include/opus.h
