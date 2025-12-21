@@ -25,6 +25,7 @@ jobs:
             base-devel
             autoconf
             automake
+            gcc
             m4
             perl
             pkg-config
