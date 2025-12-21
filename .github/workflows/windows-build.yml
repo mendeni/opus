@@ -18,7 +18,7 @@ jobs:
       - name: Setup MSYS2 and install build tools
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64        # or MSYS or MINGW32 depending on your needs
+          msystem: MSYS          # or MSYS or MINGW32 depending on your needs
           update: true            # run pacman -Syu (the action handles the restart dance)
           install: >
             base-devel
