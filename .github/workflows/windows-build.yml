@@ -43,8 +43,8 @@ jobs:
           # find / -name 'aclocal*' -type f
           echo "################"
           make --version
-          autoreconf -fi || true
-          ./configure CC="gcc" --enable-deep-plc
+          # autoreconf -fi || true
+          ./configure --enable-deep-plc
           make
           make check
 
