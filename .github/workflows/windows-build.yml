@@ -30,7 +30,8 @@ jobs:
         run: |
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
           pwd
-          find /usr/local -name aclocal
+          ln -s /mingw64/share/aclocal /mingw64/share/aclocal-1.16
+          ln -s /mingw64/share/automake /mingw64/share/automake-1.16
           make --version
           ./configure CC="gcc" --enable-deep-plc
           make
