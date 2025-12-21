@@ -1,0 +1,47 @@
+name: Opus — Build on MacOS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build (MacOS)
+    runs-on: macos-latest
+
+    steps:
+      # Checkout the repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Configure CMake
+      - name: Configure CMake
+        run: |
+          ./configure CC="gcc -arch x86_64 -arch arm64" --enable-deep-plc
+
+      # Build & Test
+      - name: Build
+        run: |
+          make
+          make check
+
+      # Move libopus.a for packaging
+      - name: Move libopus.a
+        run: |
+          mv -v .libs/libopus.a libopus.a
+
+      # Upload libopus.a and headers
+      - name: Upload libopus.a and headers
+        uses: actions/upload-artifact@v4
+        with:
+          name: opus-${{ runner.os }}
+          path: |
+            libopus.a
+            include/opus_custom.h
+            include/opus_defines.h
+            include/opus_multistream.h
+            include/opus_projection.h
+            include/opus_types.h
+            include/opus.h
