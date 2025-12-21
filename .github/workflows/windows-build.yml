@@ -35,7 +35,7 @@ jobs:
           # ls -l /mingw64/share/aclocal
           # ln -s /mingw64/share/aclocal /mingw64/share/aclocal-1.16
           # ls -l /mingw64/share/aclocal-1.16
-          find /opt -name aclocal-1.18 -type f
+          find /mingw64 -name aclocal-1.18 -type f
           echo "################"
           # make --version
           # ./configure CC="gcc" --enable-deep-plc
