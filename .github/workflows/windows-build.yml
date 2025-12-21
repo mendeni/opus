@@ -16,21 +16,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Ensure Chocolatey is installed
-        shell: pwsh
+      - name: Setup MSYS2 and install build tools
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64        # or MSYS or MINGW32 depending on your needs
+          update: true            # run pacman -Syu (the action handles the restart dance)
+          install: >
+            base-devel
+            mingw-w64-x86_64-toolchain
+
+      - name: Debug workspace & run make (MSYS2)
+        shell: msys2 {0}
         run: |
-          if (-not (Get-Command choco -ErrorAction SilentlyContinue)) {
-            Write-Host "Chocolatey not found — installing..."
-            Set-ExecutionPolicy Bypass -Scope Process -Force
-            [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
-            iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-            # Ensure choco is on PATH for the rest of this job
-            $chocoBin = Join-Path $env:ALLUSERSPROFILE 'chocolatey\bin'
-            $env:PATH = "$chocoBin;$env:PATH"
-            Write-Host "Chocolatey installed: $(choco --version)"
-          } else {
-            Write-Host "Chocolatey already installed: $(choco --version)"
-          }
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          pwd
+          ls -la
+          make --version
+          # run your build
+          # make
 
       # 2) Configure CMake
       - name: Configure CMake
