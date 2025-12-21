@@ -1,4 +1,4 @@
-name: Opus — Build on MacOS
+name: Opus — Build on Windows
 
 on:
   push:
@@ -8,8 +8,8 @@ on:
 
 jobs:
   build:
-    name: Build (MacOS)
-    runs-on: macos-latest
+    name: Build (Windows)
+    runs-on: windows-latest
 
     steps:
       # 1) Checkout the repo
@@ -19,7 +19,7 @@ jobs:
       # 2) Configure CMake
       - name: Configure CMake
         run: |
-          ./configure CC="gcc -arch x86_64 -arch arm64" --enable-deep-plc
+          ./configure CC="gcc" --enable-deep-plc
 
       # 3) Build
       - name: Build
