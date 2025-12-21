@@ -12,7 +12,6 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # 1) Checkout the repo
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -35,26 +34,16 @@ jobs:
         shell: msys2 {0}
         run: |
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          echo -n "pwd:" 
-          pwd
-          echo "################"
-          # ls -l /mingw64/share/aclocal
-          # ln -s /mingw64/share/aclocal /mingw64/share/aclocal-1.16
-          # ls -l /mingw64/share/aclocal-1.16
-          # find / -name 'aclocal*' -type f
-          echo "################"
-          make --version
-          # autoreconf -fi || true
           ./configure --enable-deep-plc
           make
           make check
 
-      # 5) Move libopus.a for packaging
+      # Move libopus.a for packaging
       - name: Move libopus.a
         run: |
           mv -v .libs/libopus.a libopus.a
 
-      # 6) Upload libopus.a and headers
+      # Upload libopus.a and headers
       - name: Upload libopus.a and headers
         uses: actions/upload-artifact@v4
         with:
