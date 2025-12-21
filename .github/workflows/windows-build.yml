@@ -23,19 +23,15 @@ jobs:
           update: true            # run pacman -Syu (the action handles the restart dance)
           install: >
             base-devel
-            autoconf
-            automake
-            m4
-            perl
-            pkg-config
-            libtool
+            mingw-w64-x86_64-toolchain
 
       - name: Debug workspace & run make (MSYS2)
         shell: msys2 {0}
         run: |
           echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
           pwd
-          autconf
+          ls -la
+          make --version
           ./configure CC="gcc" --enable-deep-plc
           make
           make check
