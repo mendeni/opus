@@ -38,6 +38,11 @@ jobs:
           make
           make check
 
+      - name: Find
+        shell: bash
+        run: |
+          find .libs . -type f
+
       # Move libopus.a for packaging
       - name: Move libopus.a
         run: |
