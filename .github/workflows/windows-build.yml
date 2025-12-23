@@ -36,7 +36,7 @@ jobs:
         with:
           name: opus-${{ runner.os }}
           path: |
-            Release/opus.lib
+            build/Release/opus.lib
             include/opus_custom.h
             include/opus_defines.h
             include/opus_multistream.h
