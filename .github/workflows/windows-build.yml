@@ -3,7 +3,7 @@ name: Opus — Build on Windows
 on:
   push:
     branches:
-      - main
+      - gh-actions-windows
   pull_request:
 
 jobs:
