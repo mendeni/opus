@@ -24,6 +24,7 @@ jobs:
       - name: Find
         shell: bash
         run: |
+          pwd
           find . -type f
 
       # - name: Move libs
@@ -35,7 +36,7 @@ jobs:
         with:
           name: opus-${{ runner.os }}
           path: |
-            opus.lib
+            Release/opus.lib
             include/opus_custom.h
             include/opus_defines.h
             include/opus_multistream.h
