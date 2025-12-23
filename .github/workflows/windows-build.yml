@@ -47,6 +47,7 @@ jobs:
       - name: Move libopus.a
         run: |
           mv -v .libs/libopus.a libopus.a
+          mv -v .libs/libopus.dll.a libopus.dll.a
 
       # Upload libopus.a and headers
       - name: Upload libopus.a and headers
@@ -55,6 +56,7 @@ jobs:
           name: opus-${{ runner.os }}
           path: |
             libopus.a
+            libopus.dll.a
             include/opus_custom.h
             include/opus_defines.h
             include/opus_multistream.h
