@@ -3,7 +3,7 @@ name: Opus — Build on Windows
 on:
   push:
     branches:
-      - main
+      - gh-actions-windows
   pull_request:
 
 jobs:
@@ -15,41 +15,24 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup MSYS2 and install build tools
-        uses: msys2/setup-msys2@v2
-        with:
-          msystem: MSYS          # or MSYS or MINGW32 depending on your needs
-          update: true            # run pacman -Syu (the action handles the restart dance)
-          install: >
-            base-devel
-            autoconf
-            automake
-            gcc
-            m4
-            perl
-            pkg-config
-            libtool
+      - name: Configure Cmake
+        run: cmake -S . -B build -DBUILD_SHARED_LIBS=OFF -DOPUS_ENABLE_DEEP_PLC=ON
 
-      - name: Debug workspace & run make (MSYS2)
-        shell: msys2 {0}
+      - name: Build Standalone
+        run: cmake --build build --config Release
+
+      - name: Find
+        shell: bash
         run: |
-          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          ./configure --enable-deep-plc
-          make
-          make check
+          pwd
+          find . -type f
 
-      # Move libopus.a for packaging
-      - name: Move libopus.a
-        run: |
-          mv -v .libs/libopus.a libopus.a
-
-      # Upload libopus.a and headers
       - name: Upload libopus.a and headers
         uses: actions/upload-artifact@v4
         with:
           name: opus-${{ runner.os }}
           path: |
-            libopus.a
+            build/Release/opus.lib
             include/opus_custom.h
             include/opus_defines.h
             include/opus_multistream.h
