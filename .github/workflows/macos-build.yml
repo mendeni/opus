@@ -22,7 +22,7 @@ jobs:
 
       - name: Configure CMake
         run: |
-          ./configure CC="gcc -arch x86_64 -arch arm64" --enable-deep-plc
+          ./configure CC="gcc -arch x86_64 -arch arm64" --enable-dred
 
       - name: Build
         run: |

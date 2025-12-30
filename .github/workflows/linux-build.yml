@@ -25,7 +25,7 @@ jobs:
       # Configure CMake
       - name: Configure CMake
         run: |
-          ./configure CC="gcc" --enable-deep-plc
+          ./configure CC="gcc" --enable-deep-dred
 
       # Build & Test
       - name: Build
