@@ -35,7 +35,7 @@ jobs:
         if: matrix.platform == 'macos'
         run: |
           brew update
-          brew install autoconf automake libtool m4 pkg-config
+          brew install autoconf automake libtool m4 pkg-config --force
 
       - name: Prepare autotools
         if: matrix.platform == 'linux' || matrix.platform == 'macos'
