@@ -1,0 +1,106 @@
+# Unified build for Linux, macOS and Windows
+name: Opus — Build (matrix)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build:
+    name: Build (${{ matrix.platform }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            platform: linux
+          - os: macos-latest
+            platform: macos
+          - os: windows-latest
+            platform: windows
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (Linux)
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake git
+
+      - name: Install GNU autotools (macOS)
+        if: matrix.platform == 'macos'
+        run: |
+          brew update
+          brew install autoconf automake libtool m4 pkg-config
+
+      - name: Configure (Linux)
+        if: matrix.platform == 'linux'
+        run: |
+          ./configure CC="gcc" --enable-deep-dred
+        shell: bash
+
+      - name: Configure (macOS)
+        if: matrix.platform == 'macos'
+        run: |
+          ./configure CC="gcc -arch x86_64 -arch arm64" --enable-dred
+        shell: bash
+
+      - name: Configure (Windows)
+        if: matrix.platform == 'windows'
+        run: cmake -S . -B build -DBUILD_SHARED_LIBS=OFF -DOPUS_ENABLE_DRED=ON
+
+      - name: Build & Test (Linux/macOS)
+        if: matrix.platform != 'windows'
+        run: |
+          make
+          make check
+        shell: bash
+
+      - name: Build (Windows)
+        if: matrix.platform == 'windows'
+        run: cmake --build build --config Release
+
+      - name: Move libopus.a (Linux/macOS)
+        if: matrix.platform != 'windows'
+        run: |
+          mv -v .libs/libopus.a libopus.a
+        shell: bash
+
+      - name: Find (Windows only)
+        if: matrix.platform == 'windows'
+        shell: bash
+        run: |
+          pwd
+          find . -type f
+
+      - name: Upload libopus.a and headers (Linux/macOS)
+        if: matrix.platform != 'windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: opus-${{ runner.os }}
+          path: |
+            libopus.a
+            include/opus_custom.h
+            include/opus_defines.h
+            include/opus_multistream.h
+            include/opus_projection.h
+            include/opus_types.h
+            include/opus.h
+
+      - name: Upload opus.lib and headers (Windows)
+        if: matrix.platform == 'windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: opus-${{ runner.os }}
+          path: |
+            build/Release/opus.lib
+            include/opus_custom.h
+            include/opus_defines.h
+            include/opus_multistream.h
+            include/opus_projection.h
+            include/opus_types.h
+            include/opus.h
