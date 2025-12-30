@@ -76,12 +76,77 @@ jobs:
           mv -v .libs/libopus.a libopus.a
         shell: bash
 
-      - name: Find (Windows only)
-        if: matrix.platform == 'windows'
-        shell: bash
+      - name: Inspect & strip libopus.a (macOS)
+        if: matrix.platform == 'macos'
         run: |
-          pwd
-          find . -type f
+          set -eux
+          # Ensure libopus.a is present (Move step usually placed it)
+          if [ ! -f libopus.a ]; then
+            echo "libopus.a not found in workspace; attempting to move from .libs/"
+            ls -la .libs || true
+            mv -v .libs/libopus.a libopus.a || true
+          fi
+      
+          echo "File info for libopus.a:"
+          file libopus.a || true
+      
+          echo "Lipo info (architectures):"
+          lipo -info libopus.a || true
+      
+          echo "Size before strip:"
+          du -h libopus.a || true
+      
+          echo "Extracting archive members (to find largest objects):"
+          mkdir -p objs
+          cd objs
+          ar -x ../libopus.a || true
+          # list largest object files
+          ls -lS *.o 2>/dev/null | head -n 20 || true
+          cd ..
+      
+          echo "Attempting to strip unnecessary symbols from libopus.a (macOS strip):"
+          # macOS strip; -x removes local symbols
+          strip -x libopus.a || echo "strip failed or strip not available"
+      
+          echo "Size after strip:"
+          du -h libopus.a || true
+        shell: bash
+      
+      - name: Inspect & strip opus.lib (Windows)
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          # Install LLVM (includes llvm-objcopy). Chocolatey is available on windows-latest.
+          choco install llvm --no-progress -y
+      
+          # Prefer ProgramFiles LLVM path, fall back to ProgramFiles(x86)
+          $llvmBin = Join-Path $env:ProgramFiles 'LLVM\bin'
+          if (!(Test-Path $llvmBin)) {
+            $llvmBin = Join-Path $env:'ProgramFiles(x86)' 'LLVM\bin'
+          }
+          $env:PATH = "$llvmBin;$env:PATH"
+      
+          Write-Host "llvm-objcopy location:"
+          Get-Command llvm-objcopy -ErrorAction SilentlyContinue | Format-List -Property Path,Version
+      
+          Write-Host "llvm-objcopy version:"
+          llvm-objcopy --version
+      
+          $libPath = 'build/Release/opus.lib'
+          if (-not (Test-Path $libPath)) {
+            Write-Host "opus.lib not found at $libPath. Listing build/Release for debugging:"
+            Get-ChildItem -Path build\Release -Recurse -File -ErrorAction SilentlyContinue | Select-Object -First 40
+            exit 1
+          }
+      
+          Write-Host "Before strip (name and size):"
+          Get-Item $libPath | Select-Object Name,Length
+      
+          # Strip unneeded symbols from COFF archive. Specify input/output targets to be explicit.
+          llvm-objcopy --input-target=coff-x86-64 --output-target=coff-x86-64 --strip-unneeded $libPath
+      
+          Write-Host "After strip (name and size):"
+          Get-Item $libPath | Select-Object Name,Length
 
       - name: Upload libopus.a and headers (Linux/macOS)
         if: matrix.platform != 'windows'
