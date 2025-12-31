@@ -57,7 +57,7 @@ jobs:
 
       - name: Configure (Windows)
         if: matrix.platform == 'windows'
-        run: cmake -S . -B build -DBUILD_SHARED_LIBS=OFF -DOPUS_ENABLE_DRED=ON
+        run: cmake -S . -B build -DBUILD_SHARED_LIBS=OFF -DOPUS_DRED=ON
 
       - name: Build & Test (Linux/macOS)
         if: matrix.platform != 'windows'
