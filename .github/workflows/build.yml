@@ -46,7 +46,7 @@ jobs:
       - name: Configure (Linux)
         if: matrix.platform == 'linux'
         run: |
-          ./configure CC="gcc" --enable-dred
+          ./configure CC="gcc" CFLAGS="-fPIC" --enable-dred
         shell: bash
 
       - name: Configure (macOS)
