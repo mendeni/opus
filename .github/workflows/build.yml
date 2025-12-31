@@ -46,7 +46,7 @@ jobs:
       - name: Configure (Linux)
         if: matrix.platform == 'linux'
         run: |
-          ./configure CC="gcc" --enable-deep-dred
+          ./configure CC="gcc" --enable-dred
         shell: bash
 
       - name: Configure (macOS)
