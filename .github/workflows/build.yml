@@ -46,18 +46,18 @@ jobs:
       - name: Configure (Linux)
         if: matrix.platform == 'linux'
         run: |
-          ./configure CC="gcc" --enable-deep-dred
+          ./configure CC="gcc"
         shell: bash
 
       - name: Configure (macOS)
         if: matrix.platform == 'macos'
         run: |
-          ./configure CC="gcc -arch x86_64 -arch arm64" --enable-dred
+          ./configure CC="gcc -arch x86_64 -arch arm64"
         shell: bash
 
       - name: Configure (Windows)
         if: matrix.platform == 'windows'
-        run: cmake -S . -B build -DBUILD_SHARED_LIBS=OFF -DOPUS_ENABLE_DRED=ON
+        run: cmake -S . -B build -DBUILD_SHARED_LIBS=OFF
 
       - name: Build & Test (Linux/macOS)
         if: matrix.platform != 'windows'
