@@ -3,8 +3,6 @@ name: Opus — Build (matrix)
 
 on:
   push:
-    branches:
-      - main
   pull_request:
 
 jobs:
@@ -46,18 +44,18 @@ jobs:
       - name: Configure (Linux)
         if: matrix.platform == 'linux'
         run: |
-          ./configure CC="gcc" CFLAGS="-fPIC" --enable-dred
+          ./configure CC="gcc" CFLAGS="-fPIC"
         shell: bash
 
       - name: Configure (macOS)
         if: matrix.platform == 'macos'
         run: |
-          ./configure CC="gcc -arch x86_64 -arch arm64" --enable-dred
+          ./configure CC="gcc -arch x86_64 -arch arm64"
         shell: bash
 
       - name: Configure (Windows)
         if: matrix.platform == 'windows'
-        run: cmake -S . -B build -DBUILD_SHARED_LIBS=OFF -DOPUS_DRED=ON
+        run: cmake -S . -B build -DBUILD_SHARED_LIBS=OFF
 
       - name: Build & Test (Linux/macOS)
         if: matrix.platform != 'windows'
